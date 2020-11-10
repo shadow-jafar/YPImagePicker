@@ -14,7 +14,7 @@ import AVFoundation
 /// Supports xib initialization.
 public class YPVideoView: UIView {
     public let playImageView = UIImageView(image: nil)
-    
+    var playerPlayCompletion: (()->Void)?
     internal let playerView = UIView()
     internal let playerLayer = AVPlayerLayer()
     internal var previewImageView = UIImageView()
@@ -115,6 +115,7 @@ extension YPVideoView {
         player.play()
         showPlayImage(show: false)
         addReachEndObserver()
+        playerPlayCompletion?()
     }
     
     public func pause() {

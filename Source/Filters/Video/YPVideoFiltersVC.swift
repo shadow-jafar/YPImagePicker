@@ -84,6 +84,10 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
             navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)
         }
         setupRightBarButtonItem()
+        videoView.playerPlayCompletion = { [weak self] in
+            self?.startPlaybackTimeChecker()
+            self?.updateCoverPickerBounds()
+        }
     }
     
     override public func viewDidAppear(_ animated: Bool) {
