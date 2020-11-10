@@ -257,7 +257,8 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
 // MARK: - TrimmerViewDelegate
 extension YPVideoFiltersVC: TrimmerViewDelegate {
     public func positionBarStoppedMoving(_ playerTime: CMTime) {
-        videoView.player.seek(to: playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        videoView.player.seek(to: trimmerView.startTime ?? playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        videoView.playerTime = trimmerView.startTime ?? playerTime
         videoView.play()
         startPlaybackTimeChecker()
         updateCoverPickerBounds()
@@ -266,7 +267,7 @@ extension YPVideoFiltersVC: TrimmerViewDelegate {
     public func didChangePositionBar(_ playerTime: CMTime) {
         stopPlaybackTimeChecker()
         videoView.pause()
-        videoView.player.seek(to: playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        videoView.player.seek(to: trimmerView.startTime ?? playerTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
     }
 }
 

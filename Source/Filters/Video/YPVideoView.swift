@@ -18,7 +18,7 @@ public class YPVideoView: UIView {
     internal let playerView = UIView()
     internal let playerLayer = AVPlayerLayer()
     internal var previewImageView = UIImageView()
-    
+    var playerTime: CMTime = CMTime.zero
     public var player: AVPlayer {
         guard playerLayer.player != nil else {
             return AVPlayer()
