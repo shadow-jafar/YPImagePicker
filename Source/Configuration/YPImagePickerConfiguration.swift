@@ -239,6 +239,9 @@ public struct YPConfigVideo {
      */
     public var compression: String = AVAssetExportPresetHighestQuality
     
+    public var passthrough: String = AVAssetExportPresetPassthrough
+
+    
     /// Choose the result video extension if you trim or compress a video. Defaults to mov.
     public var fileType: AVFileType = .mov
     

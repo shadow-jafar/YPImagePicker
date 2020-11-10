@@ -18,7 +18,7 @@ class LibraryMediaManager {
     internal var imageManager: PHCachingImageManager?
     internal var exportTimer: Timer?
     internal var currentExportSessions: [AVAssetExportSession] = []
-
+    
     /// If true then library has items to show. If false the user didn't allow any item to show in picker library.
     internal var hasResultItems: Bool {
         if let fetchResult = self.fetchResult {
@@ -88,28 +88,34 @@ class LibraryMediaManager {
         let videosOptions = PHVideoRequestOptions()
         videosOptions.isNetworkAccessAllowed = true
         videosOptions.deliveryMode = .highQualityFormat
-        imageManager?.requestAVAsset(forVideo: videoAsset, options: videosOptions) { asset, _, _ in
+        imageManager?.requestAVAsset(forVideo: videoAsset, options: videosOptions) { [weak self] asset, _, _ in
             do {
                 guard let asset = asset else { print("⚠️ PHCachingImageManager >>> Don't have the asset"); return }
+                let isNeedCrop = cropRect.size != asset.tracks(withMediaType: .video).first?.naturalSize
+                guard isNeedCrop == true else {
+                    self?.exportVideoWithNormalPreset(with: asset, duration: duration, callback: callback)
+                    return }
                 
                 let assetComposition = AVMutableComposition()
-                let assetMaxDuration = self.getMaxVideoDuration(between: duration, andAssetDuration: asset.duration)
+                guard let assetMaxDuration = self?.getMaxVideoDuration(between: duration, andAssetDuration: asset.duration) else { callback(nil)
+                    return
+                }
                 let trackTimeRange = CMTimeRangeMake(start: CMTime.zero, duration: assetMaxDuration)
                 
                 // 1. Inserting audio and video tracks in composition
                 
                 guard let videoTrack = asset.tracks(withMediaType: AVMediaType.video).first,
-                    let videoCompositionTrack = assetComposition
+                      let videoCompositionTrack = assetComposition
                         .addMutableTrack(withMediaType: .video,
                                          preferredTrackID: kCMPersistentTrackID_Invalid) else {
-                                            print("⚠️ PHCachingImageManager >>> Problems with video track")
-                                            return
-                                            
+                    print("⚠️ PHCachingImageManager >>> Problems with video track")
+                    return
+                    
                 }
                 if let audioTrack = asset.tracks(withMediaType: AVMediaType.audio).first,
-                    let audioCompositionTrack = assetComposition
-                        .addMutableTrack(withMediaType: AVMediaType.audio,
-                                         preferredTrackID: kCMPersistentTrackID_Invalid) {
+                   let audioCompositionTrack = assetComposition
+                    .addMutableTrack(withMediaType: AVMediaType.audio,
+                                     preferredTrackID: kCMPersistentTrackID_Invalid) {
                     try audioCompositionTrack.insertTimeRange(trackTimeRange, of: audioTrack, at: CMTime.zero)
                 }
                 
@@ -143,51 +149,142 @@ class LibraryMediaManager {
                     .export(to: fileURL,
                             videoComposition: videoComposition,
                             removeOldFile: true) { [weak self] session in
-                                DispatchQueue.main.async {
-                                    switch session.status {
-                                    case .completed:
-                                        if let url = session.outputURL {
-                                            if let index = self?.currentExportSessions.firstIndex(of: session) {
-                                                self?.currentExportSessions.remove(at: index)
-                                            }
-                                            callback(url)
-                                        } else {
-                                            print("LibraryMediaManager -> Don't have URL.")
-                                            callback(nil)
-                                        }
-                                    case .failed:
-                                        print("LibraryMediaManager")
-										print("Export of the video failed : \(String(describing: session.error))")
-                                        callback(nil)
-                                    default:
-										print("LibraryMediaManager")
-                                        print("Export session completed with \(session.status) status. Not handled.")
-                                        callback(nil)
+                        DispatchQueue.main.async {
+                            switch session.status {
+                            case .completed:
+                                if let url = session.outputURL {
+                                    if let index = self?.currentExportSessions.firstIndex(of: session) {
+                                        self?.currentExportSessions.remove(at: index)
                                     }
+                                    callback(url)
+                                } else {
+                                    print("LibraryMediaManager -> Don't have URL.")
+                                    callback(nil)
                                 }
-                }
-
+                            case .failed:
+                                print("LibraryMediaManager")
+                                print("Export of the video failed : \(String(describing: session.error))")
+                                callback(nil)
+                            default:
+                                print("LibraryMediaManager")
+                                print("Export session completed with \(session.status) status. Not handled.")
+                                callback(nil)
+                            }
+                        }
+                        
+                    }
+                
                 // 6. Exporting
-                DispatchQueue.main.async {
-                    self.exportTimer = Timer.scheduledTimer(timeInterval: 0.1,
-                                                            target: self,
-                                                            selector: #selector(self.onTickExportTimer),
+                DispatchQueue.main.async { [weak self] in
+                    guard let welf = self else { return }
+                    welf.exportTimer = Timer.scheduledTimer(timeInterval: 0.1,
+                                                            target: welf,
+                                                            selector: #selector(welf.onTickExportTimer),
                                                             userInfo: exportSession,
                                                             repeats: true)
                 }
-
+                
                 if let s = exportSession {
-                    self.currentExportSessions.append(s)
+                    self?.currentExportSessions.append(s)
                 }
+                
+                
             } catch let error {
                 print("⚠️ PHCachingImageManager >>> \(error)")
             }
         }
     }
+    ///Export the video with normal passthrough preset and without any crop rect changes
+    
+    fileprivate func exportVideoWithNormalPreset(with asset: AVAsset,duration: CMTime?, callback: @escaping (_ videoURL: URL?) -> Void) {
+        
+        
+        do {
+            let assetComposition = AVMutableComposition()
+            let assetMaxDuration = self.getMaxVideoDuration(between: duration, andAssetDuration: asset.duration)
+            let trackTimeRange = CMTimeRangeMake(start: CMTime.zero, duration: assetMaxDuration)
+            
+            // 1. Inserting audio and video tracks in composition
+            
+            guard let videoTrack = asset.tracks(withMediaType: AVMediaType.video).first,
+                  let videoCompositionTrack = assetComposition
+                    .addMutableTrack(withMediaType: .video,
+                                     preferredTrackID: kCMPersistentTrackID_Invalid) else {
+                print("⚠️ PHCachingImageManager >>> Problems with video track")
+                return
+                
+            }
+            if let audioTrack = asset.tracks(withMediaType: AVMediaType.audio).first,
+               let audioCompositionTrack = assetComposition
+                .addMutableTrack(withMediaType: AVMediaType.audio,
+                                 preferredTrackID: kCMPersistentTrackID_Invalid) {
+                try audioCompositionTrack.insertTimeRange(trackTimeRange, of: audioTrack, at: CMTime.zero)
+            }
+            
+            try videoCompositionTrack.insertTimeRange(trackTimeRange, of: videoTrack, at: CMTime.zero)
+            
+            // CompositionInstruction
+            let mainInstructions = AVMutableVideoCompositionInstruction()
+            mainInstructions.timeRange = trackTimeRange
+            
+            // Video Composition
+            let videoComposition = AVMutableVideoComposition(propertiesOf: asset)
+            videoComposition.instructions = [mainInstructions]
+            
+            // 5. Configuring export session
+            
+            let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                .appendingUniquePathComponent(pathExtension: YPConfig.video.fileType.fileExtension)
+            let exportSession = assetComposition
+                .export(to: fileURL,
+                        videoComposition: videoComposition,
+                        removeOldFile: true, presetName: YPConfig.video.passthrough) { [weak self] session in
+                    DispatchQueue.main.async {
+                        switch session.status {
+                        case .completed:
+                            if let url = session.outputURL {
+                                if let index = self?.currentExportSessions.firstIndex(of: session) {
+                                    self?.currentExportSessions.remove(at: index)
+                                }
+                                callback(url)
+                            } else {
+                                print("LibraryMediaManager -> Don't have URL.")
+                                callback(nil)
+                            }
+                        case .failed:
+                            print("LibraryMediaManager")
+                            print("Export of the video failed : \(String(describing: session.error))")
+                            callback(nil)
+                        default:
+                            print("LibraryMediaManager")
+                            print("Export session completed with \(session.status) status. Not handled.")
+                            callback(nil)
+                        }
+                    }
+                }
+            
+            // 6. Exporting
+            DispatchQueue.main.async {
+                self.exportTimer = Timer.scheduledTimer(timeInterval: 0.1,
+                                                        target: self,
+                                                        selector: #selector(self.onTickExportTimer),
+                                                        userInfo: exportSession,
+                                                        repeats: true)
+            }
+            
+            if let s = exportSession {
+                self.currentExportSessions.append(s)
+            }
+        }
+        catch {
+            
+        }
+        
+    }
     
     private func getMaxVideoDuration(between duration: CMTime?, andAssetDuration assetDuration: CMTime) -> CMTime {
         guard let duration = duration else { return assetDuration }
-
+        
         if assetDuration <= duration {
             return assetDuration
         } else {

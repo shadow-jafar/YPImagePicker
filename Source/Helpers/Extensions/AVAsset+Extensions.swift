@@ -43,9 +43,9 @@ extension AVAsset {
     /// - Throws: YPTrimError with description
     func export(to destination: URL,
                 videoComposition: AVVideoComposition? = nil,
-                removeOldFile: Bool = false,
+                removeOldFile: Bool = false, presetName: String = YPConfig.video.compression,
                 completion: @escaping (_ exportSession: AVAssetExportSession) -> Void) -> AVAssetExportSession? {
-        guard let exportSession = AVAssetExportSession(asset: self, presetName: YPConfig.video.compression) else {
+        guard let exportSession = AVAssetExportSession(asset: self, presetName: presetName) else {
             print("YPImagePicker -> AVAsset -> Could not create an export session.")
             return nil
         }
