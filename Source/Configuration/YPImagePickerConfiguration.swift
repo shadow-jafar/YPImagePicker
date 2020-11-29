@@ -272,6 +272,12 @@ public struct YPConfigVideo {
 	/// so, the trimmer step becomes optional.
     /// - SeeAlso: [trimmerMaxDuration](x-source-tag://trimmerMaxDuration)
     public var automaticTrimToTrimmerMaxDuration: Bool = false
+    
+    /// Bypass the max length video picking from library based on the lirary max time limit
+    /// Default value is true so all video can choose and proceed to trim vide based on the
+    /// trim value
+    public var shouldLimitMaxVideoLength = false
+
 }
 
 /// Encapsulates gallery specific settings.

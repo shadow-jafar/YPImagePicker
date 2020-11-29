@@ -362,7 +362,7 @@ public class YPLibraryVC: UIViewController, YPPermissionCheckable {
             return true
         }
         
-        let tooLong = floor(asset.duration) > YPConfig.video.libraryTimeLimit
+        let tooLong = YPConfig.video.shouldLimitMaxVideoLength == false ? false : floor(asset.duration) > YPConfig.video.libraryTimeLimit
         let tooShort = floor(asset.duration) < YPConfig.video.minimumTimeLimit
         
         if tooLong || tooShort {
