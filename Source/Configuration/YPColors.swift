@@ -13,7 +13,7 @@ public struct YPColors {
     // MARK: - Common
     
     /// The common tint color which is used for done buttons in navigation bar, multiple items selection and so on.
-    public var tintColor = UIColor.ypSystemBlue
+    public var tintColor = UIColor.white
     
     /// A color for navigation bar spinner.
     /// Default is nil, which is default iOS gray UIActivityIndicator.
@@ -45,10 +45,10 @@ public struct YPColors {
     public var bottomMenuItemBackgroundColor: UIColor = .clear
 
     /// A color for for bottom buttons selected text.
-    public var bottomMenuItemSelectedTextColor: UIColor = .ypLabel
+    public var bottomMenuItemSelectedTextColor: UIColor = UIColor(red: 231.0/255.0, green: 21.0/255.0, blue: 159.0/255.0, alpha: 1.0)
 
     /// A color for for bottom buttons not selected text.
-    public var bottomMenuItemUnselectedTextColor: UIColor = .ypSecondaryLabel
+    public var bottomMenuItemUnselectedTextColor: UIColor = UIColor.white
 
     // MARK: - Trimmer
     

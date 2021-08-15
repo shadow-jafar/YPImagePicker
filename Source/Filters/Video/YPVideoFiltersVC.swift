@@ -20,6 +20,8 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
     
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var coverThumbSelectorView: ThumbSelectorView!
+    @IBOutlet weak var labelCoverImageTitle: UILabel!
+    let labelTitle = UILabel(frame: CGRect(origin: .zero, size: CGSize(width: 200, height: 40)))
 
     public var inputVideo: YPMediaVideo!
     public var inputAsset: AVAsset { return AVAsset(url: inputVideo.url) }
@@ -46,7 +48,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = YPConfig.colors.filterBackgroundColor
+        view.backgroundColor = .black
         trimmerView.mainColor = YPConfig.colors.trimmerMainColor
         trimmerView.handleColor = YPConfig.colors.trimmerHandleColor
         trimmerView.positionBarColor = YPConfig.colors.positionLineColor
@@ -57,10 +59,13 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         
         trimBottomItem.textLabel.text = YPConfig.wordings.trim
         coverBottomItem.textLabel.text = YPConfig.wordings.cover
-
+        trimBottomItem.textLabel.textColor = .white
+        coverBottomItem.textLabel.textColor = .white
+        trimBottomItem.backgroundColor = .black
+        coverBottomItem.backgroundColor = .black
+        labelCoverImageTitle.text = ypLocalized("YPImagePickerChoosePhoto")
         trimBottomItem.button.addTarget(self, action: #selector(selectTrim), for: .touchUpInside)
         coverBottomItem.button.addTarget(self, action: #selector(selectCover), for: .touchUpInside)
-        
         // Remove the default and add a notification to repeat playback from the start
         videoView.removeReachEndObserver()
         NotificationCenter.default
@@ -82,6 +87,8 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
                                                                target: self,
                                                                action: #selector(cancel))
             navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)
+            navigationItem.leftBarButtonItem?.tintColor = YPConfig.colors.tintColor
+
         }
         setupRightBarButtonItem()
         videoView.playerPlayCompletion = { [weak self] in
@@ -177,6 +184,13 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         videoView.isHidden = false
         coverImageView.isHidden = true
         coverThumbSelectorView.isHidden = true
+        labelCoverImageTitle.isHidden = true
+        // Use YPConfig font
+        labelTitle.font = YPConfig.fonts.pickerTitleFont
+        labelTitle.textColor = .white
+        labelTitle.text = YPConfig.wordings.trim
+        labelTitle.textAlignment = .center
+        navigationItem.titleView = labelTitle
     }
     
     @objc public func selectCover() {
@@ -192,6 +206,10 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         
         stopPlaybackTimeChecker()
         videoView.stop()
+        labelCoverImageTitle.isHidden = false
+        labelTitle.font = YPConfig.fonts.pickerTitleFont
+        labelTitle.textColor = .white
+        labelTitle.text = YPConfig.wordings.cover
     }
     
     // MARK: - Various Methods

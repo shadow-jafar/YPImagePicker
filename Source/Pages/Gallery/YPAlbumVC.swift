@@ -40,6 +40,8 @@ class YPAlbumVC: UIViewController {
                                                            target: self,
                                                            action: #selector(close))
         navigationItem.leftBarButtonItem?.setFont(font: YPConfig.fonts.leftBarButtonFont, forState: .normal)
+        navigationItem.leftBarButtonItem?.tintColor = YPConfig.colors.tintColor
+
         setUpTableView()
         fetchAlbumsInBackground()
     }

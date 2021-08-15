@@ -49,11 +49,11 @@ final class YPMenuItem: UIView {
         }
     }
 
-    func select() {
-        textLabel.textColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemSelectedTextColor
+    func select(color: UIColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemSelectedTextColor) {
+        textLabel.textColor = color
     }
     
-    func deselect() {
-        textLabel.textColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemUnselectedTextColor
+    func deselect(color: UIColor = YPImagePickerConfiguration.shared.colors.bottomMenuItemUnselectedTextColor) {
+        textLabel.textColor = color
     }
 }

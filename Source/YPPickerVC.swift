@@ -209,13 +209,17 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
     
     func setTitleViewWithTitle(aTitle: String) {
         let titleView = UIView()
+        titleView.backgroundColor = .black
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barTintColor = .black
         titleView.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
         
         let label = UILabel()
         label.text = aTitle
         // Use YPConfig font
         label.font = YPConfig.fonts.pickerTitleFont
-
+        label.textColor = .white
         // Use custom textColor if set by user.
         if let navBarTitleColor = UINavigationBar.appearance().titleTextAttributes?[.foregroundColor] as? UIColor {
             label.textColor = navBarTitleColor
@@ -266,6 +270,7 @@ open class YPPickerVC: YPBottomPager, YPBottomPagerDelegate {
                                                            style: .plain,
                                                            target: self,
                                                            action: #selector(close))
+            navigationItem.leftBarButtonItem?.tintColor = YPConfig.colors.tintColor
 		}
         switch mode {
         case .library:
