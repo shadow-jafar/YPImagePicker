@@ -42,7 +42,7 @@ public struct YPColors {
     public var selectionsBackgroundColor: UIColor = .offWhiteOrBlack
 
     /// A color for bottom buttons (photo, video, all photos).
-    public var bottomMenuItemBackgroundColor: UIColor = .clear
+    public var bottomMenuItemBackgroundColor: UIColor = .black
 
     /// A color for for bottom buttons selected text.
     public var bottomMenuItemSelectedTextColor: UIColor = UIColor(red: 231.0/255.0, green: 21.0/255.0, blue: 159.0/255.0, alpha: 1.0)
