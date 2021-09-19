@@ -109,6 +109,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
             view.removeConstraint(bottomConstraint)
             view.addConstraint(item: videoView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0).isActive = true
         }
+        trimmerView.semanticContentAttribute = .forceLeftToRight
     }
     
     override public func viewDidAppear(_ animated: Bool) {
