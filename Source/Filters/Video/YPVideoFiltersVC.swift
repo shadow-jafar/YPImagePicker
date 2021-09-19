@@ -15,6 +15,8 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
     @IBOutlet weak var trimBottomItem: YPMenuItem!
     @IBOutlet weak var coverBottomItem: YPMenuItem!
     
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var topConstraints: NSLayoutConstraint!
     @IBOutlet weak var videoView: YPVideoView!
     @IBOutlet weak var trimmerView: TrimmerView!
     
@@ -94,6 +96,18 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         videoView.playerPlayCompletion = { [weak self] in
             self?.startPlaybackTimeChecker()
             self?.updateCoverPickerBounds()
+        }
+        
+        let video = inputAsset.tracks(withMediaType: .video).first
+        let width = (video?.naturalSize.width ?? 0.0) / (9  / 16)
+        if width == (video?.naturalSize.height ?? 0.0) {
+            let height = -((self.navigationController?.navigationBar.frame.height ?? 44) + UIApplication.shared.statusBarFrame.height)
+
+            topConstraints.constant = height
+        }
+        else {
+            view.removeConstraint(bottomConstraint)
+            view.addConstraint(item: videoView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1, constant: 0).isActive = true
         }
     }
     

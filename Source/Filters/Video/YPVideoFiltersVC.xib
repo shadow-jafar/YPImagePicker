@@ -10,10 +10,12 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="YPVideoFiltersVC" customModule="YPImagePicker" customModuleProvider="target">
             <connections>
+                <outlet property="bottomConstraint" destination="RhB-bN-8u7" id="RO7-q3-XPd"/>
                 <outlet property="coverBottomItem" destination="qy9-MY-67C" id="LaY-F2-uVO"/>
                 <outlet property="coverImageView" destination="daH-No-sZc" id="sNy-7V-7gV"/>
                 <outlet property="coverThumbSelectorView" destination="Tqq-Gf-aeR" id="CZG-rg-NWB"/>
                 <outlet property="labelCoverImageTitle" destination="aVo-1n-RvD" id="UWR-L6-pqN"/>
+                <outlet property="topConstraints" destination="SaE-kX-wSu" id="SLx-dm-lUs"/>
                 <outlet property="trimBottomItem" destination="uB8-a7-Vh0" id="7Rn-9o-WWN"/>
                 <outlet property="trimmerView" destination="W4N-1E-jNP" id="a4g-Mg-65j"/>
                 <outlet property="videoView" destination="AFl-Bk-oPH" id="x8U-ib-yqT"/>
@@ -25,6 +27,14 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFl-Bk-oPH" customClass="YPVideoView" customModule="YPImagePicker" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="daH-No-sZc">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </imageView>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ddu-6b-dUh">
                     <rect key="frame" x="9.5" y="409.5" width="356" height="504"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="3rl-tu-0TE">
@@ -63,17 +73,6 @@
                     <rect key="frame" x="0.0" y="627" width="187.5" height="40"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFl-Bk-oPH" customClass="YPVideoView" customModule="YPImagePicker" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="AFl-Bk-oPH" secondAttribute="height" multiplier="1:1" id="tL6-cM-ei5"/>
-                    </constraints>
-                </view>
-                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="daH-No-sZc">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMy-Fy-gyR">
                     <rect key="frame" x="0.0" y="375" width="375" height="252"/>
                     <subviews>
@@ -91,7 +90,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="Tqq-Gf-aeR" firstAttribute="leading" secondItem="W4N-1E-jNP" secondAttribute="leading" id="GFg-oD-rpc"/>
                         <constraint firstItem="W4N-1E-jNP" firstAttribute="leading" secondItem="dMy-Fy-gyR" secondAttribute="leading" constant="30" id="IGg-wF-gcV"/>
@@ -120,6 +119,7 @@
                 <constraint firstItem="dMy-Fy-gyR" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.377811" id="PNS-g6-FRJ"/>
                 <constraint firstItem="qy9-MY-67C" firstAttribute="top" secondItem="dMy-Fy-gyR" secondAttribute="bottom" id="Qlv-q8-8Hh"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="qy9-MY-67C" secondAttribute="trailing" id="RdA-eh-2U7"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="AFl-Bk-oPH" secondAttribute="bottom" id="RhB-bN-8u7"/>
                 <constraint firstItem="AFl-Bk-oPH" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="SaE-kX-wSu"/>
                 <constraint firstItem="Ddu-6b-dUh" firstAttribute="centerX" secondItem="dMy-Fy-gyR" secondAttribute="centerX" id="YtA-OM-oEh"/>
                 <constraint firstItem="uB8-a7-Vh0" firstAttribute="height" secondItem="qy9-MY-67C" secondAttribute="height" id="dil-cq-CMa"/>
