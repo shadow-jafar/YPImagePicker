@@ -20,7 +20,7 @@ open class YPImagePicker: UINavigationController {
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
-    
+    public var didCancel: (() -> Void)?
     private var _didFinishPicking: (([YPMediaItem], Bool) -> Void)?
     public func didFinishPicking(completion: @escaping (_ items: [YPMediaItem], _ cancelled: Bool) -> Void) {
         _didFinishPicking = completion
@@ -124,6 +124,7 @@ override open func viewDidLoad() {
                     let filterVC = YPPhotoFiltersVC(inputPhoto: photo,
                                                     isFromSelectionVC: true)
                     filterVC.didCancel = { [weak self] in
+                        self?.didCancel?()
                         self?.dismiss(animated: true, completion: nil)
                     }
                     // Show filters and then crop
