@@ -65,7 +65,7 @@ public class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         coverBottomItem.textLabel.textColor = .white
         trimBottomItem.backgroundColor = .black
         coverBottomItem.backgroundColor = .black
-        labelCoverImageTitle.text = ypLocalized("YPImagePickerChoosePhoto")
+        labelCoverImageTitle.text = YPConfig.wordings.chooseCoverPhoto
         trimBottomItem.button.addTarget(self, action: #selector(selectTrim), for: .touchUpInside)
         coverBottomItem.button.addTarget(self, action: #selector(selectCover), for: .touchUpInside)
         // Remove the default and add a notification to repeat playback from the start
